@@ -55,7 +55,8 @@ private:
 public:
     BSTree() : root(nullptr), nodes(0) {};
 
-    bool find(T data) {
+    bool find(T data)
+    {
         Node<T> *searchNode = this->root;
         while(searchNode)
         {
@@ -73,8 +74,8 @@ public:
         }
         return false;
     }
-
-    void insert(T data) {
+    void insert(T data)
+    {
         Node<T> *searchNode = this -> root;
         if (find(data)) return;
         if (!searchNode) this->root = new Node<T>(data);
@@ -109,42 +110,50 @@ public:
         return this->nodes;
     }
 
-    void traversePreOrder() {
-        Node<T>* node = root;
-        if(this->root) {
+    void traversePreOrder(Node<T>* node)
+    {
+        if(this->nodes==0){ return throw;}
+        else {
             std::cout << node->data << std::endl;
             if(node->left) traversePreOrder(node->left);
             if(node->right) traversePreOrder(node->right);
         }
     }
 
-    void traverseInOrder() {
-        Node<T> *node = root;
-        if(this->root){
+    void traverseInOrder(Node<T>* node)
+    {
+        if(this->nodes==0){return throw;}
+        else
+        {
             if(node->left) traverseInOrder(node->left);
             std::cout << node->data << std::endl;
             if(node->right) traverseInOrder(node->right);
         };
     }
 
-    void traversePostOrder() {
-        Node<T> *node = root;
-        if(this->root) {
+    void traversePostOrder(Node<T>* node)
+    {
+        if(this->nodes==0){return throw;}
+        else
+        {
             if(node->left) traversePostOrder(node->left);
             if(node->right) traversePostOrder(node->right);
             std::cout << node->data << std::endl;
         };
     }
 
-    Iterator<T> begin() {
+    Iterator<T> begin()
+    {
         return Iterator<T> (this->root);
     }
 
-    Iterator<T> end() {
+    Iterator<T> end()
+    {
         return Iterator<T> ();
     }
 
-    ~BSTree() {
+    ~BSTree()
+    {
         this->root->killself(this->root);
     }
 };
