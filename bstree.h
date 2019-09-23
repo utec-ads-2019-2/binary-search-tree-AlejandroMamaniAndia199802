@@ -5,11 +5,10 @@
 #include "iterator.h"
 
 template <typename T>
-class BSTree {
+class BSTree{
 private:
     Node<T> *root;
     int nodes;
-
     Node<T>* minValueNode(Node<T>* node)
     {
         auto currentNode = node;
@@ -33,14 +32,14 @@ private:
             if(!node->left)
             {
                 auto tempNode = node->right;
-                free(node);
+                delete [] node;
                 return tempNode;
             }
 
             else if(!node->right)
             {
                 auto tempNode = node->left;
-                free(node);
+                delete [] node;
                 return tempNode;
             }
 
@@ -58,10 +57,10 @@ public:
 
     bool find(T data) {
         Node<T> *searchNode = this->root;
-
         while(searchNode)
         {
-            if(data < searchNode->data)
+            if(searchNode->data == data) return true;
+            else if(data < searchNode->data)
             {
                 if(searchNode->left) searchNode = searchNode->left;
                 else break;
@@ -71,7 +70,6 @@ public:
                 if(searchNode->right) searchNode = searchNode->right;
                 else break;
             }
-            else if(searchNode->data == data) return true;
         }
         return false;
     }
@@ -79,7 +77,6 @@ public:
     void insert(T data) {
         Node<T> *searchNode = this -> root;
         if (find(data)) return;
-
         if (!searchNode) this->root = new Node<T>(data);
         else
         {
@@ -108,7 +105,7 @@ public:
         return true;
     }
 
-    unsigned int size() {
+    int size() {
         return this->nodes;
     }
 
@@ -116,25 +113,25 @@ public:
         Node<T>* node = root;
         if(this->root) {
             std::cout << node->data << std::endl;
-            if(node->left) printPreOrder(node->left);
-            if(node->right) printPreOrder(node->right);
+            if(node->left) traversePreOrder(node->left);
+            if(node->right) traversePreOrder(node->right);
         }
     }
 
     void traverseInOrder() {
         Node<T> *node = root;
         if(this->root){
-            if(node->left) printInOrder(node->left);
+            if(node->left) traverseInOrder(node->left);
             std::cout << node->data << std::endl;
-            if(node->right) printInOrder(node->right);
+            if(node->right) traverseInOrder(node->right);
         };
     }
 
     void traversePostOrder() {
         Node<T> *node = root;
         if(this->root) {
-            if(node->left) printPostOrder(node->left);
-            if(node->right) printPostOrder(node->right);
+            if(node->left) traversePostOrder(node->left);
+            if(node->right) traversePostOrder(node->right);
             std::cout << node->data << std::endl;
         };
     }
