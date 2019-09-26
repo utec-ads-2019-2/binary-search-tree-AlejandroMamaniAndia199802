@@ -11,10 +11,10 @@ private:
     int nodes;
     Node<T>* minValueNode(Node<T>* node)
     {
-        auto currentNode = node;
-        while(currentNode && currentNode->left)
-            currentNode = currentNode->left;
-        return currentNode;
+        auto current = node;
+        while(current && current->left)
+            current = current->left;
+        return current;
     }
 
     Node<T>* kill(Node<T>* node, T data)
@@ -29,17 +29,18 @@ private:
 
         else
         {
-            if(!node->left)
+            if(!node->right)
             {
-                auto tempNode = node->right;
-                delete [] node;
+                auto tempNode = node->left;
+                delete  []node;
                 return tempNode;
             }
 
-            else if(!node->right)
+            else if(!node->left)
             {
-                auto tempNode = node->left;
-                delete [] node;
+
+                auto tempNode = node->right;
+                delete []node;
                 return tempNode;
             }
 
@@ -55,43 +56,43 @@ private:
 public:
     BSTree() : root(nullptr), nodes(0) {};
 
-    bool find(T data)
-    {
-        Node<T> *searchNode = this->root;
-        while(searchNode)
+    bool find(T data) {
+        Node<T> *keyNode = this->root;
+        while(keyNode)
         {
-            if(searchNode->data == data) return true;
-            else if(data < searchNode->data)
+            if(keyNode->data == data) return true;
+            else if(data < keyNode->data)
             {
-                if(searchNode->left) searchNode = searchNode->left;
+                if(keyNode->left) keyNode = keyNode->left;
                 else break;
             }
-            else if (data > searchNode->data)
+            else if (data > keyNode->data)
             {
-                if(searchNode->right) searchNode = searchNode->right;
+                if(keyNode->right) keyNode = keyNode->right;
                 else break;
             }
         }
         return false;
     }
-    void insert(T data)
-    {
-        Node<T> *searchNode = this -> root;
+
+    void insert(T data) {
+        Node<T> *keyNode = this -> root;
         if (find(data)) return;
-        if (!searchNode) this->root = new Node<T>(data);
+        if (!keyNode) this->root = new Node<T>(data);
         else
         {
-            while(searchNode)
+            while(keyNode)
             {
-                if(data < searchNode->data)
+                if(data > keyNode->data)
                 {
-                    if(searchNode->left) searchNode = searchNode->left;
-                    else {searchNode->left = new Node<T>(data); break;}
+                    if(!(keyNode->right)) {keyNode->right = new Node<T>(data); break;}
+                    else {keyNode = keyNode->right;}
+
                 }
                 else
                 {
-                    if(searchNode->right) searchNode = searchNode->right;
-                    else {searchNode->right = new Node<T>(data); break;}
+                    if(!(keyNode->left)) {keyNode->left = new Node<T>(data); break;}
+                    else{keyNode = keyNode->left;}
                 }
             }
         }
@@ -106,54 +107,46 @@ public:
         return true;
     }
 
-    int size() {
+    unsigned int size() {
         return this->nodes;
     }
 
-    void traversePreOrder(Node<T>* node)
-    {
-        if(this->nodes==0){ return throw;}
-        else {
+    void traversePreOrder() {
+        Node<T>* node = root;
+        if(this->root) {
             std::cout << node->data << std::endl;
             if(node->left) traversePreOrder(node->left);
             if(node->right) traversePreOrder(node->right);
         }
     }
 
-    void traverseInOrder(Node<T>* node)
-    {
-        if(this->nodes==0){return throw;}
-        else
-        {
+    void traverseInOrder() {
+        Node<T> *node = root;
+        if(this->root){
             if(node->left) traverseInOrder(node->left);
             std::cout << node->data << std::endl;
             if(node->right) traverseInOrder(node->right);
         };
     }
 
-    void traversePostOrder(Node<T>* node)
-    {
-        if(this->nodes==0){return throw;}
-        else
-        {
+    void traversePostOrder() {
+        Node<T> *node = root;
+        if(this->root) {
             if(node->left) traversePostOrder(node->left);
             if(node->right) traversePostOrder(node->right);
             std::cout << node->data << std::endl;
         };
     }
 
-    Iterator<T> begin()
-    {
+    Iterator<T> begin() {
         return Iterator<T> (this->root);
     }
 
-    Iterator<T> end()
-    {
+    Iterator<T> end() {
         return Iterator<T> ();
     }
 
-    ~BSTree()
-    {
+    ~BSTree() {
         this->root->killself(this->root);
     }
 };

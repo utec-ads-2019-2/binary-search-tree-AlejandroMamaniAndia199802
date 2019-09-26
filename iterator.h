@@ -8,66 +8,69 @@ template <typename T>
 class Iterator {
 private:
     Node<T> *current;
-    std::stack< Node<T>* > *stackInc;
-    std::stack< Node<T>* > *stackDec;
+    std::stack< Node<T>* > *stackup;
+    std::stack< Node<T>* > *stackdown;
 
 public:
     Iterator() {
         current = nullptr;
-        stackInc = new std::stack<Node<T>*>;
-        stackDec = new std::stack<Node<T>*>;
+        stackup = new std::stack<Node<T>*>;
+        stackdown = new std::stack<Node<T>*>;
     }
 
 
     Iterator(Node<T> *node) {
-        if(!node)
+        if(node)
         {
-            current = nullptr;
-            stackInc = new std::stack<Node<T>*>;
-            stackDec = new std::stack<Node<T>*>;
-        }
-        else
-        {
-            stackInc = new std::stack<Node<T>*>;
-            stackDec = new std::stack<Node<T>*>;
+            stackup = new std::stack<Node<T>*>;
+            stackdown = new std::stack<Node<T>*>;
 
             current = node;
             while(current->left)
             {
-                stackInc->push(current);
+                stackup->push(current);
                 current = current->left;
             }
         }
+        else
+        {
+            current = nullptr;
+            stackup = new std::stack<Node<T>*>;
+            stackdown = new std::stack<Node<T>*>;
+        }
     }
 
-    Iterator<T> operator=(Iterator<T> other) {
+    Iterator<T> operator=(Iterator<T> other)
+            {
         this->current = other.current;
-        *stackInc = other.stackInc;
-        *stackDec = other.stackDec;
+        *stackup = other.stackInc;
+        *stackdown = other.stackDec;
     }
 
-    bool operator!=(Iterator<T> other) {
+    bool operator!=(Iterator<T> other)
+    {
         return &(this->current) != &(other.current);
     }
 
-    Iterator<T> operator++() {
+    Iterator<T> operator++()
+            {
         if(!current) return *this;
-        stackDec->push(current);
+        stackdown->push(current);
         if(current->right)
         {
             current = current->right;
             while(current->left)
             {
-                stackInc->push(current);
+                stackup->push(current);
                 current = current->left;
             }
         }
         else
         {
-            if(stackInc->size()>0)
+            if(stackup->size()>0)
             {
-                current = stackInc->top();
-                stackInc->pop();
+                current = stackup->top();
+                stackup->pop();
             }
             else
                 current = nullptr;
@@ -77,18 +80,18 @@ public:
     }
 
     Iterator<T> operator--() {
-        if(stackDec->empty()) return *this;
+        if(stackdown->empty()) return *this;
 
-        if(!current)
+        if(current)
         {
-            current = stackDec->top();
-            stackDec->pop();
+            stackup->push(current);
+            current = stackdown->top();
+            stackdown->pop();
         }
         else
         {
-            stackInc->push(current);
-            current = stackDec->top();
-            stackDec->pop();
+            current = stackdown->top();
+            stackdown->pop();
         }
 
         return *this;
