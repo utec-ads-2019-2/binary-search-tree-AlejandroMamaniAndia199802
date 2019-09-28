@@ -45,6 +45,7 @@ public:
         this->current = other.current;
         *stackup = other.stackInc;
         *stackdown = other.stackDec;
+        // Y el return?
     }
 
     bool operator!=(Iterator<T> other)

@@ -77,7 +77,9 @@ public:
 
     void insert(T data) {
         Node<T> *keyNode = this -> root;
+        // Podrías haber trabajado con doble puntero para evitar recorrer el árbol 2 veces
         if (find(data)) return;
+        // Sería bueno sacar el new a un solo lugar en vez de repetirlo en diversos lados
         if (!keyNode) this->root = new Node<T>(data);
         else
         {
@@ -101,6 +103,7 @@ public:
 
     bool remove(T data) {
         Node<T> *searchNode = this -> root;
+        // Lo mismo, con un doble puntero o con algún otro método te evitas hacer 2 recorridos
         if (!find(data) || !searchNode) return false;
         this->root = kill(searchNode, data);
         --nodes;
@@ -112,6 +115,7 @@ public:
     }
 
     void traversePreOrder() {
+        // El temporal node es innecesario
         Node<T>* node = root;
         if(this->root) {
             std::cout << node->data << std::endl;
